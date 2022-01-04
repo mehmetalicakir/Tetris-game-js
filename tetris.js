@@ -98,9 +98,6 @@ Piece.prototype.unDraw = function() {
 }
 
 
-
-
-
 // Move down the piece
 
 Piece.prototype.moveDown = function() {
