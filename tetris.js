@@ -65,7 +65,7 @@ function Piece(tetromino,color) {
     this.activeTetromino = this.tetromino[this.tetrominoN];
 
     // Control the pieces
-    this.x = 0;
+    this.x = 3;
     this.y = 0;
 }
 
@@ -82,4 +82,41 @@ Piece.prototype.draw = function() {
         
     }
 }
-p.draw();
+
+// Undraw a piece to the board
+
+Piece.prototype.unDraw = function() {
+    for (let r = 0; r < this.activeTetromino.length; r++) {
+        for (let c = 0; c < this.activeTetromino.length; c++) {
+            // Draw only occupied squares
+            if(this.activeTetromino[r][c]) {
+                drawSquare(this.x+c,this.y+r,VACANT);
+            }
+        }
+        
+    }
+}
+
+
+
+
+
+// Move down the piece
+
+Piece.prototype.moveDown = function() {
+    this.unDraw();
+    this.y++;
+    this.draw();
+}
+let dropStart = Date.now();
+function drop() {
+    let now = Date.now();
+    let delta = now - dropStart;
+    if (delta > 1000) {
+        p.moveDown();
+        dropStart = Date.now();
+    }
+    
+    requestAnimationFrame(drop);
+}
+drop();
