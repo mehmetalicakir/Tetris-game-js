@@ -69,32 +69,30 @@ function Piece(tetromino,color) {
     this.y = 0;
 }
 
-// Draw a piece to the board
+//Fill Function
 
-Piece.prototype.draw = function() {
+Piece.prototype.fill = function(color) {
     for (let r = 0; r < this.activeTetromino.length; r++) {
         for (let c = 0; c < this.activeTetromino.length; c++) {
             // Draw only occupied squares
             if(this.activeTetromino[r][c]) {
-                drawSquare(this.x+c,this.y+r,this.color);
+                drawSquare(this.x+c,this.y+r,color);
             }
         }
         
     }
 }
 
+// Draw a piece to the board
+
+Piece.prototype.draw = function() {
+    this.fill(this.color);
+}
+
 // Undraw a piece to the board
 
 Piece.prototype.unDraw = function() {
-    for (let r = 0; r < this.activeTetromino.length; r++) {
-        for (let c = 0; c < this.activeTetromino.length; c++) {
-            // Draw only occupied squares
-            if(this.activeTetromino[r][c]) {
-                drawSquare(this.x+c,this.y+r,VACANT);
-            }
-        }
-        
-    }
+    this.fill(VACANT);
 }
 
 
@@ -105,6 +103,49 @@ Piece.prototype.moveDown = function() {
     this.y++;
     this.draw();
 }
+
+// Move right the piece
+
+Piece.prototype.moveRight = function() {
+    this.unDraw();
+    this.x++;
+    this.draw();
+}
+
+// Move left the piece
+
+Piece.prototype.moveLeft = function() {
+    this.unDraw();
+    this.x--;
+    this.draw();
+}
+
+// Rotate the piece
+
+Piece.prototype.rotate = function() {
+    this.unDraw();
+    this.tetrominoN = (this.tetrominoN + 1)%this.tetromino.length; //For be loop
+    this.activeTetromino = this.tetromino[this.tetrominoN];
+    this.draw();
+}
+
+
+// Control the piece
+
+document.addEventListener("keydown", CONTROL);
+function CONTROL(event) {
+    if (event.keyCode == 37) {
+        p.moveLeft();
+    } else if (event.keyCode == 38) {
+        p.rotate();
+    } else if (event.keyCode == 39) {
+        p.moveRight();
+    } else if(event.keyCode == 40){
+        p.moveDown();
+    }
+}
+
+
 let dropStart = Date.now();
 function drop() {
     let now = Date.now();
