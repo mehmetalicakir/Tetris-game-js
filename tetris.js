@@ -71,7 +71,7 @@ function Piece(tetromino,color) {
 
     // Control the pieces
     this.x = 3;
-    this.y = 0;
+    this.y = -2;
 }
 
 //Fill Function
@@ -170,7 +170,7 @@ Piece.prototype.lock = function(){
                continue;
             }
             // Piece to lock on top = gave over
-            if (this.y + r < 1) {
+            if (this.y + r < 0) {
                 alert("Game Over");
                 // Stop request animation frame
                 gameOver = true;
