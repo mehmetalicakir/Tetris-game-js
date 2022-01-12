@@ -110,6 +110,8 @@ Piece.prototype.moveDown = function() {
         this.draw();  
     }else{
         // we lock the piece and generate a new one
+        this.lock();
+        p = randomPiece();
     }
 }
 
@@ -159,6 +161,30 @@ Piece.prototype.rotate = function() {
     
 }
 
+// Piece Lock
+Piece.prototype.lock = function(){
+    for (r = 0; r < this.activeTetromino.length; r++) {
+        for (c = 0; c < this.activeTetromino.length; c++) {
+            // Skip the vacant square
+            if(!this.activeTetromino[r][c]) {
+               continue;
+            }
+            // Piece to lock on top = gave over
+            if (this.y + r < 1) {
+                alert("Game Over");
+                // Stop request animation frame
+                gameOver = true;
+                break;
+            }
+            // Lock the piece
+            board[this.y + r][this.x+c] = this.color;
+        }
+        
+    }
+}
+
+
+
 //Collision Function
 
 Piece.prototype.collision = function(x,y,piece) {
@@ -207,6 +233,7 @@ function CONTROL(event) {
 
 
 let dropStart = Date.now();
+let gameOver = false;
 function drop() {
     let now = Date.now();
     let delta = now - dropStart;
@@ -214,7 +241,9 @@ function drop() {
         p.moveDown();
         dropStart = Date.now();
     }
+    if (!gameOver) {
+        requestAnimationFrame(drop);
+    }
     
-    requestAnimationFrame(drop);
 }
 drop();
