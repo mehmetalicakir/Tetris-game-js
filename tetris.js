@@ -50,9 +50,14 @@ const PIECES = [
     [J,"orange"]
 ];
 
-// Initiate a piece
+// generate random piece
 
-let p = new Piece(PIECES[0][0],PIECES[0][1]);
+function randomPiece() {
+    let r = randomN = Math.floor(Math.random() * PIECES.length) //0-6
+    return new Piece(PIECES[r][0],PIECES[r][1]);
+}
+
+let p = randomPiece();
 
 
 // The Object Piece
@@ -134,8 +139,20 @@ Piece.prototype.moveLeft = function() {
 
 Piece.prototype.rotate = function() {
     let nextPattern = this.tetromino[(this.tetrominoN + 1)%this.tetromino.length];
+    let kick = 0;
+    if(this.collision(0,0,nextPattern)){
+        if (this.x > COL/2) {
+            //It's the right wall
+            kick = -1; //we need to move the piece to the left
+        }else{
+            //It's the left wall
+            kick = 1; //we need to move the piece to the right
+        }
+    }
+
     if (!this.collision(0,0,nextPattern)){
         this.unDraw();
+        this.x += kick;
         this.tetrominoN = (this.tetrominoN + 1)%this.tetromino.length; //For be loop
         this.activeTetromino = this.tetromino[this.tetrominoN];
         this.draw();}
