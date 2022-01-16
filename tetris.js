@@ -1,5 +1,6 @@
 const cvs = document.getElementById("tetris");
 const ctx = cvs.getContext("2d");
+const scoreElement = document.getElementById("score");
 
 const ROW = 20;
 const COL = COLUMN = 10;
@@ -161,6 +162,8 @@ Piece.prototype.rotate = function() {
     
 }
 
+let score = 0;
+
 // Piece Lock
 Piece.prototype.lock = function(){
     for (r = 0; r < this.activeTetromino.length; r++) {
@@ -181,6 +184,30 @@ Piece.prototype.lock = function(){
         }
         
     }
+    // remove full rows
+    for(r = 0; r<ROW;r++){
+        let isRowFull = true;
+        for (c = 0; c < COL; c++) {
+            isRowFull = isRowFull && (board[r][c] != VACANT)
+        }
+        if (isRowFull) {
+            // move down all the rows above it
+            for(y=r;y>1;y--){
+                for(c = 0; c < COL; c++){
+                    board[y][c] = board[y-1][c];
+                }
+            }
+            // full white top section
+            for(c = 0; c < COL; c++){
+                board[0][c] = VACANT;
+            }
+            // increment the score
+            score += 10;
+        }
+    }
+    // update the board and score
+    drawBoard();
+    scoreElement.innerHTML = score;
 }
 
 
